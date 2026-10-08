@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+  Companion GraphQL module for StripeIntegration_Payments.
+
+  The stock Stripe Payments module ships a GraphQL schema that only covers
+  payment configuration and saved payment methods. All of its rich
+  subscription functionality (product subscription options, customer
+  subscriptions, cancellation) is exposed to the Luma frontend through PHP
+  blocks/controllers only. This module surfaces that same data over GraphQL
+  for a headless storefront, WITHOUT modifying the upgradeable core module
+  (the same pattern Magento uses for Catalog vs CatalogGraphQl).
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="Magenx_StripePaymentsGraphQl">
+        <sequence>
+            <module name="StripeIntegration_Payments"/>
+            <module name="Magento_CatalogGraphQl"/>
+            <module name="Magento_QuoteGraphQl"/>
+            <module name="Magento_CustomerGraphQl"/>
+        </sequence>
+    </module>
+</config>
