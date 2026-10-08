@@ -40,7 +40,7 @@ Luma blocks do.
 ## Install
 
 ```bash
-composer require magenx/module-stripe-payments-graph-ql
+composer require magenxcommerce/module-stripe-payments-graph-ql
 bin/magento module:enable Magenx_StripePaymentsGraphQl
 bin/magento setup:upgrade
 bin/magento cache:flush
@@ -55,7 +55,7 @@ the module has no config or tables of its own, so nothing else carries over. On 
 
 ```bash
 rm -rf app/code/StripeIntegration/PaymentsGraphQl     # or: composer remove <old package>
-composer require magenx/module-stripe-payments-graph-ql
+composer require magenxcommerce/module-stripe-payments-graph-ql
 # drop any leftover 'StripeIntegration_PaymentsGraphQl' line from app/etc/config.php
 bin/magento module:enable Magenx_StripePaymentsGraphQl
 bin/magento setup:upgrade

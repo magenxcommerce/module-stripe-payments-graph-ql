@@ -1,5 +1,5 @@
 {
-    "name": "magenx/module-stripe-payments-graph-ql",
+    "name": "magenxcommerce/module-stripe-payments-graph-ql",
     "description": "GraphQL bindings for Stripe Payments subscriptions (product options, customer subscriptions, cancellation) for headless storefronts.",
     "type": "magento2-module",
     "license": "MIT",
