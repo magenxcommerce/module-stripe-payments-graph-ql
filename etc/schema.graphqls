@@ -1,0 +1,52 @@
+# Companion GraphQL schema for StripeIntegration_Payments subscriptions.
+# Merges with the core Stripe module schema (and Magento's own) at runtime —
+# it only ADDS fields, never redefines the existing ones.
+
+interface ProductInterface {
+    stripe_subscription: StripeProductSubscription @resolver(class: "Magenx\\StripePaymentsGraphQl\\Model\\Resolver\\ProductSubscription") @doc(description: "Stripe recurring-billing options for this product, or null when it is not sold as a subscription.")
+}
+
+interface CartItemInterface {
+    stripe_subscription: StripeProductSubscription @resolver(class: "Magenx\\StripePaymentsGraphQl\\Model\\Resolver\\CartItemSubscription") @doc(description: "Stripe subscription options for this cart line, or null when the line is not a subscription product.")
+}
+
+type StripeProductSubscription @doc(description: "Stripe recurring-billing options configured for a product.") {
+    is_subscription: Boolean @doc(description: "Always true when this object is present (the product is sold as a subscription).")
+    interval: String @doc(description: "Billing interval unit: day, week, month or year.")
+    interval_count: Int @doc(description: "Number of intervals between billings, e.g. 3 for every 3 months.")
+    trial_days: Int @doc(description: "Number of free trial days before the first billing, 0 when there is no trial.")
+    initial_fee: Float @doc(description: "One-time setup fee added to the first payment, in the store's display currency.")
+    formatted_interval: String @doc(description: "Human readable interval, e.g. '3 Months'.")
+    frequency_label: String @doc(description: "Short recurrence suffix, e.g. '/ month' or '/ 3 months'.")
+}
+
+type Customer {
+    stripe_subscriptions: [StripeCustomerSubscription] @resolver(class: "Magenx\\StripePaymentsGraphQl\\Model\\Resolver\\CustomerSubscriptions") @doc(description: "The logged-in customer's Stripe subscriptions (active and recently canceled).")
+}
+
+type StripeCustomerSubscription @doc(description: "A Stripe subscription belonging to a customer.") {
+    subscription_id: String @doc(description: "The Stripe subscription ID (sub_...).")
+    label: String @doc(description: "A display name for the subscription, derived from its products.")
+    status: String @doc(description: "Raw Stripe status: active, trialing, past_due, unpaid, canceled, etc.")
+    status_label: String @doc(description: "Translated, human readable status.")
+    is_active: Boolean @doc(description: "True when the subscription is not canceled/incomplete.")
+    amount: Float @doc(description: "The recurring amount billed each period, in the subscription's currency.")
+    currency: String @doc(description: "ISO currency code of the subscription amount.")
+    formatted_amount: String @doc(description: "The recurring amount formatted with its currency symbol.")
+    interval: String @doc(description: "Billing interval unit: day, week, month or year.")
+    interval_count: Int @doc(description: "Number of intervals between billings.")
+    current_period_end: Int @doc(description: "UNIX timestamp when the current billing period ends / next billing occurs.")
+    created_at: Int @doc(description: "UNIX timestamp when the subscription was created at Stripe. Used by the storefront to list newest subscriptions first.")
+    can_cancel: Boolean @doc(description: "True when the customer is allowed to cancel this subscription from the storefront.")
+    order_increment_id: String @doc(description: "The Magento order increment ID that created this subscription, when known.")
+}
+
+type Mutation {
+    cancelStripeSubscription(subscription_id: String! @doc(description: "The Stripe subscription ID (sub_...) to cancel.")): StripeCancelSubscriptionOutput @resolver(class: "Magenx\\StripePaymentsGraphQl\\Model\\Resolver\\CancelStripeSubscription") @doc(description: "Cancels one of the logged-in customer's Stripe subscriptions.")
+}
+
+type StripeCancelSubscriptionOutput @doc(description: "Result of the cancelStripeSubscription mutation.") {
+    success: Boolean @doc(description: "True when the subscription was canceled.")
+    message: String @doc(description: "A human readable result message.")
+    subscriptions: [StripeCustomerSubscription] @doc(description: "The customer's remaining subscriptions after the cancellation.")
+}
