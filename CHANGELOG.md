@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/magenxcommerce/module-stripe-payments-graph-ql/compare/v1.0.0...v1.0.1) (2026-11-01)
+
+
+### Bug Fixes
+
+* require PHP 8.4 or newer ([#4](https://github.com/magenxcommerce/module-stripe-payments-graph-ql/issues/4)) ([b75601f](https://github.com/magenxcommerce/module-stripe-payments-graph-ql/commit/b75601f9c956e2ca81e41c2bc447359613644e26))
+
 ## 1.0.0 (2026-10-11)
 
 
